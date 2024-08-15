@@ -1,0 +1,55 @@
+<!-- Voltar dois niveis anteriores de pasta - Pulo do gato -->
+<%- include ../../partials/header.ejs %>
+<%- include ../../partials/navbar.ejs %>  
+
+<div class="container">
+            <hr> 
+            <h2>Artigos</h2>
+            <a class="btn btn-success" href="/admin/articles/new"> Criar novo Artigo </a>
+            <hr>         
+        
+        <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Titulo</th>
+                        <th>Slug</th>
+                        <th>Categoria</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% articles.forEach(article => { %>
+                        <tr>
+                            <th scope="row"><%= article.id %></td>
+                            <td><%= article.title %></td>
+                            <td><%= article.slug %></td>
+                            <td><%= article.category.title %></td>
+                            <td>
+                                <a href="/admin/articles/edit/<%= article.id %>" class=" btn btn-warning"> Editar </a>
+                                <form method="post" action="/articles/delete" style="display: inline;" onsubmit="confirmarDelecao(event, this)">
+                                    <input type="hidden" name="id" value="<%= article.id %>">
+                                <button class=" btn btn-danger"> Deletar  </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>    
+                    
+                </tbody>
+        </table>
+            
+         
+  
+</div>
+<script>
+    function confirmarDelecao(event, form){
+        event.preventDefault();
+        var decision = confirm("Você quer deletar este artigo ?");
+        if(decision){
+           form.submit();
+        }else{
+            console.log( "Não quero deletar, foi um acidente !");
+        }
+    }
+</script>
+<%- include  ../../partials/footer.ejs %>

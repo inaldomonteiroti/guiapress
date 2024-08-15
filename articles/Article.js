@@ -22,6 +22,6 @@ Article.belongsTo(Category); // Um artigo pertence a uma categoria 1 x 1
 //Se vc quisesse simplificar bastava ter um deles
 
 //Atualizar banco de dados
-// Article.sync({ force: true});
+//Article.sync({ force: true});
 
 module.exports = Article;
