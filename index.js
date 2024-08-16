@@ -21,7 +21,58 @@ app.use(express.static('public'));
 
 //Criando uma rota principal
 app.get("/", (req,res) => {
-    res.render("index");
+
+    Article.findAll({
+        order:[
+           ['id','DESC'] 
+        ]
+    }).then(articles =>{
+        Category.findAll().then(categories => {
+            res.render("index", {articles: articles, categories: categories});
+        });
+    });
+})
+
+//Criando rota para o leia mais com slug
+app.get("/:slug",(req, res) => {
+    var slug = req.params.slug;
+    Article.findOne({
+        where: {
+            slug: slug
+        }
+    }).then(article => {
+        if(article != undefined){
+            Category.findAll().then(categories => {
+                res.render("article", {article: article, categories: categories});
+            });
+        }else{
+            res.redirect("/");
+        }
+    }).catch( err => {
+        res.redirect("/");
+    });
+})
+
+//Criando rota para buscar uma categoria especifica e seus artigos
+
+app.get("/category/:slug",(req, res) => {
+    var slug = req.params.slug;
+    Category.findOne({
+        where: {
+            slug: slug
+        },
+        include: [{model: Article}]
+    }).then( category => {
+        if(category != undefined){
+            Category.findAll().then(categories => {
+                res.render("index",{articles: category.articles,categories: categories});
+            });
+        }else{
+            res.redirect("/");
+        }
+    }).catch( err => {
+        res.redirect("/");
+    })
 })
 
 //Database com promisses then e catch
